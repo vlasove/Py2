@@ -28,3 +28,4 @@ class Point:
 p = Point(10, 20)
 1/0
 p2 = Point(30, 40)
+
