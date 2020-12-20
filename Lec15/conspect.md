@@ -9,3 +9,128 @@
 ### Шаг 1. Попробуем реализовать простейшее модульно тестирование
 * Решаем задачку : https://contest.yandex.ru/contest/23646/problems/K/
 * Лекция стартует в 14:15 (Нужно к этому моменту решить задачу)
+
+Одно из возможных неправильных решений могло выглядеть вот так:
+```
+"""
+Полотно решения задачи D3:K
+"""
+coeffs = []
+
+with open("input.txt", "r") as fhand:
+    line_with_coeffs = fhand.read() # "2 3 4"
+    coeffs = [float(x) for x in line_with_coeffs.split()] # ["2" , "3", "4"]
+
+def solve(coeffs:list):
+    """
+    Решатель квадратного уравнения
+    """
+    a, b, c = coeffs 
+    d = b**2 - 4*a*c 
+    if d > 0:
+        return 2
+    elif d == 0:
+        return 1 
+    return 0 
+
+with open("output.txt", "w") as fhand:
+    fhand.write(str(solve(coeffs)))
+```
+
+### Шаг 2. Попробуем обложить код модульными тестами.
+Для того, чтобы обложить код модульными тестами нам необходимо ***ДЕКОМПОЗИРОВАТЬ*** наше решение. Под декомпозицией мы подразумеваем разбиение кода на независимые юниты.***Код работает верно тогда и только тогда, когда все юниты работают верно.***
+***Предложение***. Введем в код 2 юнита ```linear(B,C)``` и ```quadratic(A,B,C)``` - функции, которые решают линейное и квадратное уравнение соответственно. Задаче же функции ```solve``` будет выбор - кому передать работу.
+
+
+Реализуем функцию ```linear(B,C)```:
+```
+def linear(B:float, C:float):
+    """
+    Функция для решения линейного уравнения вида Bx + C = 0
+    x = - C/B
+    Возвращает количество корней
+    """
+    if B ==0:
+        return 0 
+    return 1
+```
+
+Реализуем функцию ```quadratic(A,B,C)```:
+```
+def quadratic(A:float, B:float, C:float):
+    """
+    Функция для решения квадратного уравнения вида Ax^2 + Bx + C = 0 
+    Возвращает количество вещественных корней
+    """
+    D = B**2 - 4*A*C 
+    if D > 0:
+        return 2 
+    elif D == 0:
+        return 1 
+    return 0
+```
+
+Перепишем функцию ```solve```:
+```
+def solve(coeffs:list):
+    """
+    Выбирает, какому решателю передать работу
+    """
+    if coeffs[0] == 0:
+        return linear(coeffs[1], coeffs[2])
+    return quadratic(coeffs[0], coeffs[1], coeffs[2])
+```
+
+И теперь наш код магическим образом стал понятным всем.
+В итоге код выглядит следующим образом:
+```
+"""
+Стандартное решения задачи D3:K
+"""
+
+def linear(B:float, C:float):
+    """
+    Функция для решения линейного уравнения вида Bx + C = 0
+    x = - C/B
+    Возвращает количество корней
+    """
+    if B ==0:
+        return 0 
+    return 1
+
+def quadratic(A:float, B:float, C:float):
+    """
+    Функция для решения квадратного уравнения вида Ax^2 + Bx + C = 0 
+    Возвращает количество вещественных корней
+    """
+    D = B**2 - 4*A*C 
+    if D > 0:
+        return 2 
+    elif D == 0:
+        return 1 
+    return 0
+
+def solve(coeffs:list):
+    """
+    Выбирает, какому решателю передать работу
+    """
+    if coeffs[0] == 0:
+        return linear(coeffs[1], coeffs[2])
+    return quadratic(coeffs[0], coeffs[1], coeffs[2])
+
+
+def main():
+    coeffs = []
+
+    with open("input.txt", "r") as fhand:
+        line_with_coeffs = fhand.read() # "2 3 4"
+        coeffs = [float(x) for x in line_with_coeffs.split()] # ["2" , "3", "4"]
+
+    with open("output.txt", "w") as fhand:
+        fhand.write(str(solve(coeffs)))
+
+if __name__ == "__main__":
+    main()
+```
+
+### Шаг 2.1. Модульные тесты. Это кто?
