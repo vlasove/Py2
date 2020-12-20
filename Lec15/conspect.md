@@ -288,6 +288,6 @@ if __name__ == "__main__":
 
 ### Запуски
 * Запуск модульных тестов : ```python -m unittest -v test_equation.py```
-* Запуск ```autopep8``` : ```python -m autopep8 --inplace --aggrssive equation.py```
+* Запуск ```autopep8``` : ```python -m autopep8 --in-place --aggressive equation.py```
 * Запуск ```pylint``` : ```python -m pylint equation.py```
 * Повторяем, пока не будем все ***супер-блестяще***.
